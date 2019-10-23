@@ -1,0 +1,32 @@
+sudo: required
+
+dist: trusty
+
+language: node_js
+
+services:
+  - docker
+
+node_js:
+  - "10.8.0"
+
+env:
+  global:
+    - secure: "GSd7+NHTQRARW3e65aWrxmeh2nLtDWSzeJYAePEyYOho6FZlZMaBsagtjZZz5olZXMDXmkwPSrvdz6O9CFydndO46hLX75gQB0NvS7SapRf9yzznjeW76vTXS4VUkH9TvyE0szGgmsNiErtn+fuaSf010X9j8ZX40nygpJLKk2wJpxhGjpYtbhhhhYQzaTHF28x17uDbZXo8p4ZS4XUkEEMedy5SrFy3ca5nulB5yauNCbMgmoLhPbH46ChFWkuF5qaU1tuyklNTctf3rqYIJWycq3dTzBg97PnHqsBcYDspF0W8+DX7K26dH8BiuEBUWyzQr+rSogFJvTmhEJxnEqt1ULfLqN9XiuBASQiTTp/P2haXiCUA69swSUzCCLLJJgzbnCq4K6c/cdDlW4nQzyzQ2kGfCysOAIfY6ZSBuH6cehmBIeeBzA8ILgJuSfKpQ9m3uuWNao98kEfxsyB8S0JP4e5nqJhVdNLUoZDZbDEA3fjWYs9eIFEFLDigM596h9MXAszoHlobH/0H+QtFV7Y2X5jgNMtdSeI5RM41q673YxUCyE/sx8fjMN3wK2eZogdM0NOsIgiwi9MsQhGyzNUak9Lg6fUiLbEBPp2CoUAkETKFmye6r1bgMuuW0o8taMnPN+Df31gOnpIrqmINXjOMDV2ltWnFUmMzFHpLq88="
+    - secure: "a5GV5oXj6RpRCXbNNjc7dfY0UXo1JQ9aYIMgtHh2ecKNdIhKT9Dg3jBwguB/62MD11WEEHzG45+wjaaqmYd8hM14OyaPNhloy+JMjOKTUgWjkKNuzJyjhj2f4rs6Js4J6zU3Wxh7WGf7jGBplFpYTBrRZAhfDcoXpSSJ60leQB9jBOlnJ3af/KA66vHYRd2Lrnc6ReGCmwhkthJwExOPV9g9LLLm/TfPz0RSYJwDJ145Opz6vBGHRonGLxqFkPwM9gab05A/MESABPVcf52ABhnTrQpOTIpaHIdPvAlE2/gA2E1Ixh5JF6TquVCbPR5+5Q1NIIXE4Lmjlz4XTQwXHcvLbBnSnBCNCZPsDKqwJhwryFIej9ToWjAElaqCCc+WFzuHDYh7pprn5v8zOcLAAhWhdgItCZ5D2Bn5nrV054yq3d7BMAiIVwH9BHZV64Nr9AgtYRKGEyzKnM75Qe8sgHmq/GPY+mmFQ+XSg3fgEjjD6YqS4mPWWBRl0NTNXbrsTAp8M3nn8YTyazTpOW+vG5iT+FLFglv4dG2OuyTB0NbBhE4Kv+/DH1Ipf8XyP0ZQgLHvW9OTDs2HkttK+MS7DUtxOyLnU8TaJwWlK9S4TcLNz+8H/DGAE7vX8/Vt2ehJmLttwGq9mLCvDLQP0OQYP4ovvzTdVDkVnBHc8SYLM2c="
+
+cache:
+  npm: true
+
+script:
+  - echo "Skipping tests"
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "stable"; elif [ "$TRAVIS_BRANCH" == "dev" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - docker build -t docker.pkg.github.com/svindicium/json-api-to-ics/icalfeed:$TAG .
+
+deploy:
+  provider: script
+  script:
+    echo "$DOCKER_PASS" | docker login docker.pkg.github.com -u "$DOCKER_USER" --password-stdin;
+    docker push docker.pkg.github.com/svindicium/json-api-to-ics/icalfeed:$TAG;
+  on:
+    all_branches: true
