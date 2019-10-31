@@ -5,7 +5,7 @@ import moment from 'moment'
 
 const APIURL = 'https://old.indicium.hu/json/events?page%5Bsize%5D=10000'
 
-const stripHTMLFromString = str => str.replace(/(<([^>]+)>)/ig,'').replace(/\n|\r/g, '')
+const stripHTMLFromString = str => str.replace(/(<([^>]+)>)/ig,'').replace(/\n|\r/g, ' ').replace('&nbsp;', '')
 
 function parseIndiciumAPIEventObject(eventObj) {
   const { attributes: {
