@@ -46,7 +46,7 @@ export function getEvents(req) {
 
       const finalEventObjects = categories !== undefined
         ? getFilteredEvents(eventObjects, categories.split(','))
-        : getFilteredEvents(eventObjects, ['SD', 'TI', 'SNE', 'BIM', 'AI'])
+        : getFilteredEvents(eventObjects, ['SD', 'TI', 'CSC', 'BIM', 'AI'])
 
       log.info({ finalEventObjects})
 
